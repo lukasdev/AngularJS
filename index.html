@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" data-ng-app>
+	<head>
+		<meta charset=UTF-8>
+		<title>Angular JS - Basicão</title>
+	</head>
+
+	<body data-ng-init="nomes=[
+		{nome:'Lucas Silva', email: 'contato@downsmaster.com'},
+		{nome: 'Samuel Rodrigues', email: 'samuel@exemplo.com'},
+		{nome: 'Fulaninho de tal', email: 'fulaninho@teste.com'},
+		{nome: 'Ciclaninho', email: 'ciclano@site.com'}
+	]">
+		<input type="text" data-ng-model="nomeFiltrar"/>
+
+		<ul>
+			<li data-ng-repeat="usuario in nomes | filter:nomeFiltrar | orderBy:'nome'">
+				{{usuario.nome | lowercase}} - {{usuario.email | uppercase}}</li>
+		</ul>
+		<script type="text/javascript" src="angular.min.js"></script>
+	</body>
+</html>
