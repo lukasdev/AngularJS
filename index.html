@@ -1,22 +1,64 @@
 <!DOCTYPE HTML>
-<html lang="pt-BR" data-ng-app>
+<html lang="pt-BR" data-ng-app="downsMaster">
 	<head>
 		<meta charset=UTF-8>
 		<title>Angular JS - Basicão</title>
 	</head>
 
-	<body data-ng-init="nomes=[
-		{nome:'Lucas Silva', email: 'contato@downsmaster.com'},
-		{nome: 'Samuel Rodrigues', email: 'samuel@exemplo.com'},
-		{nome: 'Fulaninho de tal', email: 'fulaninho@teste.com'},
-		{nome: 'Ciclaninho', email: 'ciclano@site.com'}
-	]">
+	<body>
 		<input type="text" data-ng-model="nomeFiltrar"/>
 
-		<ul>
-			<li data-ng-repeat="usuario in nomes | filter:nomeFiltrar | orderBy:'nome'">
-				{{usuario.nome | lowercase}} - {{usuario.email | uppercase}}</li>
-		</ul>
+		<div class="catainer" data-ng-controller="UsuariosController">
+			<ul>
+				<li data-ng-repeat="usuario in usuarios | filter:nomeFiltrar | orderBy:'nome'">
+					{{usuario.nome | lowercase}} - {{usuario.email | uppercase}}
+				</li>
+			</ul>
+			<hr />
+			Nome: <input type="text" data-ng-model="nomeCadastrar"/><br />
+			Email: <input type="text" data-ng-model="emailCadastrar"/><br />
+			<button data-ng-click="cadastraUsuario()">Cadastrar Novo Usuario</button>
+		</div>
+
+		<hr />
+		<div class="catainer" data-ng-controller="ProdutosController">
+			<ul>
+				<li data-ng-repeat="produto in produtos">
+					{{produto.titulo}} - {{produto.valor | currency:"R$":2}}
+				</li>
+			</ul>
+		</div>
+
+
 		<script type="text/javascript" src="angular.min.js"></script>
+		<script type="text/javascript">
+			var app = angular.module('downsMaster',[]);
+			var controllers = {};
+			controllers.UsuariosController = function($scope){
+				$scope.usuarios =[
+					{nome:'Lucas Silva', email: 'contato@downsmaster.com'},
+					{nome: 'Samuel Rodrigues', email: 'samuel@exemplo.com'},
+					{nome: 'Fulaninho de tal', email: 'fulaninho@teste.com'},
+					{nome: 'Ciclaninho', email: 'ciclano@site.com'}
+				];
+
+				$scope.cadastraUsuario = function(){
+					$scope.usuarios.push({
+						nome: $scope.nomeCadastrar,
+						email: $scope.emailCadastrar
+					});
+				}
+			}
+
+
+			app.controller(controllers);
+			app.controller('ProdutosController', function($scope){
+				$scope.produtos = [
+					{titulo: 'Mac Book Pro', valor:1500.40},
+					{titulo: 'Pc comum', valor:1000.55},
+					{titulo: 'Camiseta Death Note', valor:50.40}
+				];
+			});
+		</script>
 	</body>
 </html>
