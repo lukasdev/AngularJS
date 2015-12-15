@@ -6,41 +6,60 @@
 	</head>
 
 	<body>
-		<input type="text" data-ng-model="nomeFiltrar"/>
-
-		<div class="catainer" data-ng-controller="UsuariosController">
-			<ul>
-				<li data-ng-repeat="usuario in usuarios | filter:nomeFiltrar | orderBy:'nome'">
-					{{usuario.nome | lowercase}} - {{usuario.email | uppercase}}
-				</li>
-			</ul>
-			<hr />
-			Nome: <input type="text" data-ng-model="nomeCadastrar"/><br />
-			Email: <input type="text" data-ng-model="emailCadastrar"/><br />
-			<button data-ng-click="cadastraUsuario()">Cadastrar Novo Usuario</button>
-		</div>
-
-		<hr />
-		<div class="catainer" data-ng-controller="ProdutosController">
-			<ul>
-				<li data-ng-repeat="produto in produtos">
-					{{produto.titulo}} - {{produto.valor | currency:"R$":2}}
-				</li>
-			</ul>
-		</div>
-
+		<a href="#/usuarios">Usuarios</a>
+		<a href="#/produtos">Produtos</a>
+		<div class="views" data-ng-view></div>
 
 		<script type="text/javascript" src="angular.min.js"></script>
+		<script type="text/javascript" src="angular-route.js"></script>
+		<script type="text/javascript" src="jquery.js"></script>
+
 		<script type="text/javascript">
-			var app = angular.module('downsMaster',[]);
+			var app = angular.module('downsMaster',['ngRoute'])
+			.service('produtosService', function(){
+				this.getProdutos = function(){
+					var produtos = 	[
+						{id: 1, titulo: 'Mac Book Pro', valor:1500.40},
+						{id: 2, titulo: 'Pc comum', valor:1000.55},
+						{id: 3, titulo: 'Camiseta Death Note', valor:50.40}
+					];
+
+					return produtos;
+				}
+
+				this.getProduto = function(id, produtos){
+					var retornar = {};
+					$.each(produtos, function(i, val){
+						var produto = produtos[i];
+						if(produto.id == id){
+							retornar = produto;
+						}
+					});
+					return retornar;
+				}
+				return this;
+			})
+			.factory('usuariosFactory', function(){
+				var factory = {};
+				factory.getUsuarios = function(){
+					var usuarios = [
+						{nome:'Lucas Silva', email: 'contato@downsmaster.com'},
+						{nome: 'Samuel Rodrigues', email: 'samuel@exemplo.com'},
+						{nome: 'Fulaninho de tal', email: 'fulaninho@teste.com'},
+						{nome: 'Ciclaninho', email: 'ciclano@site.com'}
+					];
+
+					return usuarios;
+				}
+
+				return factory;
+			});
+
 			var controllers = {};
-			controllers.UsuariosController = function($scope){
-				$scope.usuarios =[
-					{nome:'Lucas Silva', email: 'contato@downsmaster.com'},
-					{nome: 'Samuel Rodrigues', email: 'samuel@exemplo.com'},
-					{nome: 'Fulaninho de tal', email: 'fulaninho@teste.com'},
-					{nome: 'Ciclaninho', email: 'ciclano@site.com'}
-				];
+			controllers.UsuariosController = function($scope, produtosService, usuariosFactory){
+				$scope.produtos = produtosService.getProdutos();
+
+				$scope.usuarios = usuariosFactory.getUsuarios();
 
 				$scope.cadastraUsuario = function(){
 					$scope.usuarios.push({
@@ -52,12 +71,28 @@
 
 
 			app.controller(controllers);
-			app.controller('ProdutosController', function($scope){
-				$scope.produtos = [
-					{titulo: 'Mac Book Pro', valor:1500.40},
-					{titulo: 'Pc comum', valor:1000.55},
-					{titulo: 'Camiseta Death Note', valor:50.40}
-				];
+			app.controller('ProdutosController', function($scope, $routeParams, produtosService){
+				$scope.produtos = produtosService.getProdutos();
+
+				if($routeParams.produtoId){
+					$scope.produto = produtosService.getProduto($routeParams.produtoId, $scope.produtos);
+				}
+			});
+
+			app.config(function($routeProvider){
+				$routeProvider.when('/usuarios',{
+					controller: 'UsuariosController',
+					templateUrl: 'views/usuariosView.html'
+				})
+				.when('/produtos',{
+					controller: 'ProdutosController',
+					templateUrl: 'views/produtosView.html'
+				})
+				.when('/produtos/:produtoId', {
+					controller: 'ProdutosController',
+					templateUrl: 'views/produtoSingleView.html'
+				})
+				.otherwise({redirectTo: '/usuarios'});
 			});
 		</script>
 	</body>

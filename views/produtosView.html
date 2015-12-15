@@ -1,0 +1,7 @@
+<div class="catainer">
+	<ul>
+		<li data-ng-repeat="produto in produtos">
+			<a href="#/produtos/{{produto.id}}">{{produto.titulo}} - {{produto.valor | currency:"R$":2}}</a>
+		</li>
+	</ul>
+</div>

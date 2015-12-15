@@ -1,0 +1,16 @@
+<input type="text" data-ng-model="nomeFiltrar"/>
+<div class="catainer">
+	<ul>
+		<li data-ng-repeat="usuario in usuarios | filter:nomeFiltrar | orderBy:'nome'">
+			{{usuario.nome | lowercase}} - {{usuario.email | uppercase}}
+		</li>
+	</ul>
+	<h2>Produtos cadastrados</h2>
+	<ul>
+		<li data-ng-repeat="produto in produtos">{{produto.titulo}}</li>
+	</ul>
+	<hr />
+	Nome: <input type="text" data-ng-model="nomeCadastrar"/><br />
+	Email: <input type="text" data-ng-model="emailCadastrar"/><br />
+	<button data-ng-click="cadastraUsuario()">Cadastrar Novo Usuario</button>
+</div>
