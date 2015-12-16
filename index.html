@@ -21,7 +21,8 @@
 					var produtos = 	[
 						{id: 1, titulo: 'Mac Book Pro', valor:1500.40},
 						{id: 2, titulo: 'Pc comum', valor:1000.55},
-						{id: 3, titulo: 'Camiseta Death Note', valor:50.40}
+						{id: 3, titulo: 'Camiseta Death Note', valor:50.40},
+						{id: 4, titulo: 'Bicicleta BMX', valor:132.40}
 					];
 
 					return produtos;
@@ -71,8 +72,13 @@
 
 
 			app.controller(controllers);
-			app.controller('ProdutosController', function($scope, $routeParams, produtosService){
+			app.controller('ProdutosController', function($scope, $routeParams, $filter, produtosService){
 				$scope.produtos = produtosService.getProdutos();
+				$scope.reverse = false;
+				$scope.ordena = function(array, por){
+					$scope.produtos = $filter('orderBy')(array, por, $scope.reverse);
+					$scope.reverse = !$scope.reverse;
+				}
 
 				if($routeParams.produtoId){
 					$scope.produto = produtosService.getProduto($routeParams.produtoId, $scope.produtos);
@@ -93,6 +99,18 @@
 					templateUrl: 'views/produtoSingleView.html'
 				})
 				.otherwise({redirectTo: '/usuarios'});
+			});
+
+			app.directive('downsElement', function(){
+				return {
+					restrict: 'E',
+					templateUrl: 'templateDirective.html',
+					scope:{},
+					link: function(scope, elem, attrs){
+						scope.valor = attrs.val;
+						scope.titulo = attrs.title;
+					}
+				}
 			});
 		</script>
 	</body>

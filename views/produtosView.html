@@ -1,7 +1,17 @@
 <div class="catainer">
-	<ul>
-		<li data-ng-repeat="produto in produtos">
-			<a href="#/produtos/{{produto.id}}">{{produto.titulo}} - {{produto.valor | currency:"R$":2}}</a>
-		</li>
-	</ul>
+	<table>
+		<tr>
+			<td data-ng-click="ordena(produtos, 'titulo')">Titulo</td>
+			<td data-ng-click="ordena(produtos, 'valor')">Valor</td>
+		</tr>
+
+		<tr  data-ng-repeat="produto in produtos">
+			<td>
+				<a href="#/produtos/{{produto.id}}">
+					<downs-element title="{{produto.titulo}}" val="{{produto.valor}}"></downs-element>
+				</a>
+			</td>
+			<td>{{produto.valor | currency:"R$":2}}</td>
+		</tr>
+	</table>
 </div>
